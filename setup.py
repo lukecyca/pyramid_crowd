@@ -10,7 +10,21 @@ setup(
 
     packages=['pyramid_crowd'],
     install_requires=[
-        #'Crowd',
+        'Crowd',
         'pyramid',
+        'mock',
+        'nose',
     ],
+
+    classifiers=[
+        "Development Status :: 2 - Pre-Alpha",
+        "Intended Audience :: Developers",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.3",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: System :: Systems Administration :: Authentication/Directory",
+        "Framework :: Pyramid",
+    ]
+
 )
