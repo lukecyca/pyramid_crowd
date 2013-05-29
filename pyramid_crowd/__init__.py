@@ -1,5 +1,6 @@
 from zope.interface import implementer
 from pyramid.interfaces import IAuthenticationPolicy
+from pyramid.security import Everyone, Authenticated
 from crowd import CrowdServer
 
 import logging
@@ -28,7 +29,7 @@ class CrowdAuthenticationPolicy(object):
 
         # Connect to crowd server
         self.crowd = CrowdServer(crowd_uri, app_name, app_pass)
-        if self.server.auth_ping():
+        if self.crowd.auth_ping():
             logger.info("Established communication to Crowd server")
 
         else:
@@ -49,17 +50,21 @@ class CrowdAuthenticationPolicy(object):
                 logger.warning("Crowd SSO failed for {0}".format(request.remote_addr))
 
         # Crowd SSO failed
-        return False
+        return None
 
     def unauthenticated_userid(self, request):
         return self.authenticated_userid(request)
 
     def effective_principals(self, request):
+        princs = [Everyone]
+
         username = self.authenticated_userid(request)
-        princs = [username]
-        princs.extend(
-            ['group:' + g for g in self.crowd.get_groups(username)]
-        )
+        if username:
+            princs.extend([Authenticated, username])
+            princs.extend(
+                ['group:' + g for g in self.crowd.get_groups(username)]
+            )
+
         return princs
 
     def _get_cookie(self, value, expired=False):
