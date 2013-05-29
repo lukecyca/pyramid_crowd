@@ -104,3 +104,18 @@ class CrowdAuthenticationPolicyTests(unittest.TestCase):
             set(authn.effective_principals(request)),
             set(['luke', 'group:admin', 'group:employees', Authenticated, Everyone])
         )
+
+    def test_get_cookie(self):
+        authn = CrowdAuthenticationPolicy()
+        self.assertEquals(
+            authn._get_cookie('Meringue'),
+            'crowd.token_key="Meringue"; Path=/; Domain=.example.com; Secure'
+        )
+
+    def test_get_cookie_expired(self):
+        authn = CrowdAuthenticationPolicy()
+        self.assertEquals(
+            authn._get_cookie('Meringue', expired=True),
+            'crowd.token_key="Meringue"; Path=/; Domain=.example.com; Secure'
+            '; Max-Age=0; Expires=Wed, 31-Dec-97 23:59:59 GMT'
+        )
