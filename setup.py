@@ -7,6 +7,7 @@ setup(
     author='Luke Cyca',
     author_email='me@lukecyca.com',
     url='https://github.com/lukecyca/pyramid_crowd',
+    license='BSD',
 
     packages=['pyramid_crowd'],
     install_requires=[
