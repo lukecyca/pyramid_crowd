@@ -87,8 +87,11 @@ class CrowdAuthenticationPolicy(object):
         user_data = self.crowd.authenticate(principal, password, request.remote_addr)
         if user_data:
             logger.info("{0} logged in via password".format(principal))
-
-        return [('Set-Cookie', self._get_cookie(user_data['token']))]
+            return [('Set-Cookie', self._get_cookie(user_data['token']))]
 
     def forget(self, request):
+        token = request.cookies.get(self.cookie_name)
+        if token:
+            self.crowd.terminate_session(token)
+
         return [('Set-Cookie', self._get_cookie('', expired=True))]
