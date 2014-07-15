@@ -84,7 +84,7 @@ class CrowdAuthenticationPolicy(object):
         return cookie
 
     def remember(self, request, principal, password='', **kw):
-        user_data = self.crowd.authenticate(principal, password, request.remote_addr)
+        user_data = self.crowd.get_session(principal, password, request.remote_addr)
         if user_data:
             logger.info("{0} logged in via password".format(principal))
             return [('Set-Cookie', self._get_cookie(user_data['token']))]
